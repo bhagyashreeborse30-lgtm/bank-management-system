@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Transaction History — NexaBank{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Transaction History</h1>
+
+<div class="card">
+  {% if txns %}
+  <div class="txn-table-wrap">
+    <div class="txn-table-head">
+      <span>Transaction</span>
+      <span>Account</span>
+      <span class="align-right">Amount</span>
+      <span class="align-right">Date</span>
+    </div>
+    {% for t in txns %}
+    {% set icons = {'deposit': '↓', 'withdrawal': '↑', 'transfer': '⇄'} %}
+    {% set bg = {'deposit': 'rgba(0,229,200,0.1)', 'withdrawal': 'rgba(255,107,107,0.1)', 'transfer': 'rgba(91,156,246,0.1)'} %}
+    {% set tc = {'deposit': 'var(--accent)', 'withdrawal': 'var(--red)', 'transfer': 'var(--blue)'} %}
+    <div class="txn-table-row">
+      <div class="txn-cell-main">
+        <div class="txn-icon" style="background:{{ bg.get(t.type,'rgba(255,255,255,0.05)') }};color:{{ tc.get(t.type,'var(--muted)') }}">
+          {{ icons.get(t.type, '•') }}
+        </div>
+        <div>
+          <p class="txn-type">{{ t.type }}</p>
+          <p class="txn-desc">{{ t.description or '—' }}</p>
+        </div>
+      </div>
+      <div class="mono" style="font-size:0.72rem;color:var(--muted)">{{ t.account_number or '—' }}</div>
+      <div class="align-right">
+        <span class="txn-amount {{ 'txn-credit' if t.type == 'deposit' else 'txn-debit' }} mono">
+          {{ '+' if t.type == 'deposit' else '−' }}₹{{ "{:,.2f}".format(t.amount) }}
+        </span>
+      </div>
+      <div class="align-right" style="font-size:0.72rem;color:var(--muted)">{{ t.created_at[:10] }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty-state">No transactions yet</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Accounts — NexaBank{% endblock %}
+{% block content %}
+
+<h1 class="page-title">My Accounts</h1>
+
+<div class="accounts-grid">
+  {% if accounts %}
+    {% for a in accounts %}
+    <div class="card acc-full-card">
+      <div class="acc-row-top">
+        <span class="acc-type-badge">{{ a.account_type }}</span>
+        <span class="acc-status {{ 'active' if a.is_active else '' }}"></span>
+      </div>
+      <p class="acc-number">{{ a.account_number }}</p>
+      <p class="acc-full-balance">₹{{ "{:,.2f}".format(a.balance) }}</p>
+      <p class="acc-opened">Opened {{ a.created_at[:10] }}</p>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">No accounts found</div>
+  {% endif %}
+</div>
+{% endblock %}

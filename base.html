@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}NexaBank{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  {% if user %}
+  <nav class="navbar">
+    <a class="navbar-brand" href="/">
+      <div class="navbar-logo">N</div>
+      <span>NexaBank</span>
+    </a>
+    <div class="navbar-links">
+      <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Dashboard</a>
+      <a href="/accounts" class="nav-link {% if request.path == '/accounts' %}active{% endif %}">Accounts</a>
+      <a href="/deposit" class="nav-link {% if request.path == '/deposit' %}active{% endif %}">Deposit</a>
+      <a href="/withdraw" class="nav-link {% if request.path == '/withdraw' %}active{% endif %}">Withdraw</a>
+      <a href="/transfer" class="nav-link {% if request.path == '/transfer' %}active{% endif %}">Transfer</a>
+      <a href="/transactions" class="nav-link {% if request.path == '/transactions' %}active{% endif %}">History</a>
+    </div>
+    <div class="navbar-right">
+      <span class="navbar-user">{{ user.name }}</span>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+    <button class="mobile-menu-btn" id="menuBtn">☰</button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Dashboard</a>
+    <a href="/accounts" class="nav-link {% if request.path == '/accounts' %}active{% endif %}">Accounts</a>
+    <a href="/deposit" class="nav-link {% if request.path == '/deposit' %}active{% endif %}">Deposit</a>
+    <a href="/withdraw" class="nav-link {% if request.path == '/withdraw' %}active{% endif %}">Withdraw</a>
+    <a href="/transfer" class="nav-link {% if request.path == '/transfer' %}active{% endif %}">Transfer</a>
+    <a href="/transactions" class="nav-link {% if request.path == '/transactions' %}active{% endif %}">History</a>
+    <a href="/logout" class="nav-link" style="color:var(--red)">Logout</a>
+  </div>
+  {% endif %}
+
+  <main class="main-content fade-in">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (btn) btn.addEventListener('click', () => menu.classList.toggle('open'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — NexaBank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+<div class="auth-wrap fade-in">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-logo-wrap">N</div>
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-sub">Open your NexaBank account today</p>
+    </div>
+    <div class="card auth-card">
+      {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+      {% endif %}
+      <form method="post">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-input" placeholder="Jane Doe" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-input" placeholder="Min. 6 characters" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Type</label>
+          <select name="account_type" class="form-select">
+            <option value="savings">Savings</option>
+            <option value="current">Current</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:0.5rem">Create Account →</button>
+      </form>
+      <p class="auth-footer">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — NexaBank{% endblock %}
+{% block content %}
+
+<p class="greeting-sub">Good day,</p>
+<h1 class="greeting-name">{{ user.name }} 👋</h1>
+
+<!-- Hero Balance Card -->
+<div class="hero-card">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-label">Total Portfolio</p>
+      <p class="hero-amount">₹{{ "{:,.2f}".format(total) }}</p>
+      <p class="hero-meta">{{ accounts|length }} active account{{ 's' if accounts|length != 1 else '' }}</p>
+    </div>
+    <div class="hero-actions">
+      <a href="/deposit" class="btn btn-primary">+ Deposit</a>
+      <a href="/transfer" class="btn btn-outline">Transfer</a>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-grid">
+  <a href="/deposit" class="quick-card">
+    <div class="quick-icon" style="color:var(--accent)">↓</div>
+    <div>
+      <p class="quick-label">Deposit</p>
+      <p class="quick-sub">Add funds</p>
+    </div>
+  </a>
+  <a href="/withdraw" class="quick-card">
+    <div class="quick-icon" style="color:var(--gold)">↑</div>
+    <div>
+      <p class="quick-label">Withdraw</p>
+      <p class="quick-sub">Cash out</p>
+    </div>
+  </a>
+  <a href="/transfer" class="quick-card">
+    <div class="quick-icon" style="color:var(--blue)">⇄</div>
+    <div>
+      <p class="quick-label">Transfer</p>
+      <p class="quick-sub">Send money</p>
+    </div>
+  </a>
+  <a href="/transactions" class="quick-card">
+    <div class="quick-icon" style="color:var(--purple)">☰</div>
+    <div>
+      <p class="quick-label">History</p>
+      <p class="quick-sub">All activity</p>
+    </div>
+  </a>
+</div>
+
+<!-- Bottom grid: accounts + recent txns -->
+<div class="bottom-grid">
+  <div>
+    <div class="section-header">
+      <span class="section-title">Accounts</span>
+      <a href="/accounts" class="section-link">View all →</a>
+    </div>
+    {% if accounts %}
+      {% for a in accounts %}
+      <div class="acc-mini">
+        <div class="acc-row-top">
+          <span class="acc-type-badge">{{ a.account_type }}</span>
+          <span class="acc-status {{ 'active' if a.is_active else '' }}"></span>
+        </div>
+        <p class="acc-number">{{ a.account_number }}</p>
+        <p class="acc-balance">₹{{ "{:,.2f}".format(a.balance) }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">No accounts found</div>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="section-header">
+      <span class="section-title">Recent Activity</span>
+      <a href="/transactions" class="section-link">See all →</a>
+    </div>
+    <div class="card-inner">
+      {% if txns %}
+        {% for t in txns %}
+        {% set icons = {'deposit': '↓', 'withdrawal': '↑', 'transfer': '⇄'} %}
+        {% set bg = {'deposit': 'rgba(0,229,200,0.1)', 'withdrawal': 'rgba(255,107,107,0.1)', 'transfer': 'rgba(91,156,246,0.1)'} %}
+        {% set tc = {'deposit': 'var(--accent)', 'withdrawal': 'var(--red)', 'transfer': 'var(--blue)'} %}
+        <div class="txn-item">
+          <div class="txn-icon" style="background:{{ bg.get(t.type,'rgba(255,255,255,0.05)') }};color:{{ tc.get(t.type,'var(--muted)') }}">
+            {{ icons.get(t.type, '•') }}
+          </div>
+          <div class="txn-info">
+            <p class="txn-type">{{ t.type }}</p>
+            <p class="txn-desc">{{ t.description or t.account_number or '—' }}</p>
+          </div>
+          <div class="txn-right">
+            <p class="txn-amount {{ 'txn-credit' if t.type == 'deposit' else 'txn-debit' }}">
+              {{ '+' if t.type == 'deposit' else '−' }}₹{{ "{:,.2f}".format(t.amount) }}
+            </p>
+            <p class="txn-date">{{ t.created_at[:10] }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">No transactions yet</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
